@@ -1,0 +1,35 @@
+version: "3"
+
+services:
+  app:
+    build: ./.devcontainer
+    volumes:
+      - ./:/usr/src/app/
+    networks:
+    - afterthat
+    ports: 
+        - ${PORT}:${PORT}
+    container_name: app
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - "3306:3306"
+    volumes:
+      - "at-db:/var/lib/mysql"
+    networks:
+      - afterthat
+    environment:
+      MYSQL_DATABASE: afterthat
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    container_name: db
+
+volumes:
+  at-db:
+    
+networks:
+  afterthat:
+    external: true
